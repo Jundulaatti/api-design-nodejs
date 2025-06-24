@@ -4,4 +4,9 @@ node_modules/
 .DS_Store
 dist/
 
+# Prisma
+.prisma/
+*.db
+*.db-journal
+
 /src/generated/prisma

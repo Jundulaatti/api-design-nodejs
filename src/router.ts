@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { protect, createJWT } from "./modules/auth";
-import { PrismaClient } from "./generated/prisma";
+import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 
 const router = Router();
