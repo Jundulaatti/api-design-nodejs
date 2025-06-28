@@ -3,56 +3,35 @@ import { protect, createJWT } from "./modules/auth";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 
+import { body, validationResult } from "express-validator";
+
 const router = Router();
 const prisma = new PrismaClient();
 
-/** User Auth **/
-router.post("/signup", async (req, res) => {
-  const hash = await bcrypt.hash(req.body.password, 10);
-  const user = await prisma.user.create({
-    data: {
-      username: req.body.username,
-      password: hash,
-    },
-  });
-
-  const token = createJWT(user);
-  res.json({ token });
-});
-
-router.post("/signin", async (req, res) => {
-  const user = await prisma.user.findUnique({
-    where: {
-      username: req.body.username,
-    },
-  });
-
-  if (!user) {
-    res.status(401);
-    res.json({ message: "Invalid username or password" });
-    return;
-  }
-
-  const valid = await bcrypt.compare(req.body.password, user.password);
-
-  if (!valid) {
-    res.status(401);
-    res.json({ message: "Invalid username or password" });
-    return;
-  }
-
-  const token = createJWT(user);
-  res.json({ token });
-});
+const validateProduct = [
+  body("name").isString().isLength({ min: 3 }),
+  body("description").optional().isString().trim(),
+  body("price")
+    .isFloat({ min: 1 })
+    .withMessage("Price must be a positive number"),
+];
 
 /** Product **/
 
 router.get("/product", protect, (req, res) => {
-  res.json({ message: req.shhhh_secret });
+  res.json({ message: "message" });
 });
 router.get("/product/:id", protect, () => {});
-router.put("/product/:id", protect, () => {});
-router.post("/product", protect, () => {});
+router.put("/product/:id", body("name"), (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    res.status(400);
+    res.json({ errors: errors.array() });
+    return;
+  }
+});
+router.post("/product", protect, (req, res) => {});
 router.delete("/product/:id", protect, () => {});
 
 /** Update Point **/
