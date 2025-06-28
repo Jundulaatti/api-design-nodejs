@@ -3,42 +3,56 @@ import { protect, createJWT } from "./modules/auth";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 
-import { body, validationResult } from "express-validator";
+import { body, oneOf } from "express-validator";
+import { handleInputErrors, validateProduct } from "./modules/middleware";
+import { getProducts } from "./handlers/product";
 
 const router = Router();
 const prisma = new PrismaClient();
 
-const validateProduct = [
-  body("name").isString().isLength({ min: 3 }),
-  body("description").optional().isString().trim(),
-  body("price")
-    .isFloat({ min: 1 })
-    .withMessage("Price must be a positive number"),
-];
+/**
+ * Product
+ */
+router.get("/product", getProducts);
+router.get("/product/:id", () => {});
+router.put(
+  "/product/:id",
+  body("name").isString(),
+  handleInputErrors,
+  (req, res) => {},
+);
+router.post("/product", body("name").isString(), handleInputErrors, () => {});
+router.delete("/product/:id", () => {});
 
-/** Product **/
+/** Update **/
 
-router.get("/product", protect, (req, res) => {
-  res.json({ message: "message" });
-});
-router.get("/product/:id", protect, () => {});
-router.put("/product/:id", body("name"), (req, res) => {
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    res.status(400);
-    res.json({ errors: errors.array() });
-    return;
-  }
-});
-router.post("/product", protect, (req, res) => {});
-router.delete("/product/:id", protect, () => {});
+router.get("/update", protect, () => {});
+router.get("/update/:id", protect, () => {});
+router.put(
+  "/update/:id",
+  body("title").optional(),
+  body("body").optional(),
+  body("status").isIn(["IN_PROGRESS", "SHIPPED", "DEPRECATED"]).optional(),
+  body("version").optional(),
+);
+router.post(
+  "/update",
+  body("title").exists().isString(),
+  body("body").exists().isString(),
+  body("productId").exists().isString(),
+);
+router.delete("/update/:id", protect, () => {});
 
 /** Update Point **/
 
 router.get("/updatepoint", protect, () => {});
 router.get("/updatepoint/:id", protect, () => {});
-router.put("/updatepoint/:id", protect, () => {});
+router.put(
+  "/updatepoint/:id",
+  body("name").isString(),
+  body("description").isString(),
+  () => {},
+);
 router.post("/updatepoint", protect, () => {});
 router.delete("/updatepoint/:id", protect, () => {});
 
