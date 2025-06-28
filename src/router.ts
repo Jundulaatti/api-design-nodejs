@@ -5,7 +5,13 @@ import bcrypt from "bcrypt";
 
 import { body, oneOf } from "express-validator";
 import { handleInputErrors, validateProduct } from "./modules/middleware";
-import { getProducts } from "./handlers/product";
+import {
+  getProducts,
+  getOneProduct,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+} from "./handlers/product";
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -13,16 +19,22 @@ const prisma = new PrismaClient();
 /**
  * Product
  */
-router.get("/product", getProducts);
-router.get("/product/:id", () => {});
+router.get("/product", protect, getProducts);
+router.get("/product/:id", protect, getOneProduct);
 router.put(
   "/product/:id",
   body("name").isString(),
   handleInputErrors,
-  (req, res) => {},
+  updateProduct,
 );
-router.post("/product", body("name").isString(), handleInputErrors, () => {});
-router.delete("/product/:id", () => {});
+router.post(
+  "/product",
+  protect,
+  body("name").isString(),
+  handleInputErrors,
+  createProduct,
+);
+router.delete("/product/:id", protect, deleteProduct);
 
 /** Update **/
 
