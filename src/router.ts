@@ -12,6 +12,13 @@ import {
   updateProduct,
   deleteProduct,
 } from "./handlers/product";
+import {
+  getUpdates,
+  getOneUpdate,
+  createUpdate,
+  updateUpdate,
+  deleteUpdate,
+} from "./handlers/update";
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -38,22 +45,24 @@ router.delete("/product/:id", protect, deleteProduct);
 
 /** Update **/
 
-router.get("/update", protect, () => {});
-router.get("/update/:id", protect, () => {});
+router.get("/update", getUpdates);
+router.get("/update/:id", getOneUpdate);
 router.put(
   "/update/:id",
-  body("title").optional(),
-  body("body").optional(),
+  body("title").exists().isString(),
+  body("body").exists().isString(),
   body("status").isIn(["IN_PROGRESS", "SHIPPED", "DEPRECATED"]).optional(),
   body("version").optional(),
+  updateUpdate,
 );
 router.post(
   "/update",
   body("title").exists().isString(),
   body("body").exists().isString(),
   body("productId").exists().isString(),
+  createUpdate,
 );
-router.delete("/update/:id", protect, () => {});
+router.delete("/update/:id", deleteUpdate);
 
 /** Update Point **/
 
