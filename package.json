@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
+    "test:watch": "jest --watch",
     "dev": "ts-node src/index.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
@@ -16,15 +17,20 @@
   "dependencies": {
     "@prisma/client": "^6.10.0",
     "@types/cors": "^2.8.19",
+    "@types/jest": "^30.0.0",
+    "@types/supertest": "^6.0.3",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "express-validator": "^7.2.1",
+    "jest": "^30.0.3",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "lodash.merge": "^4.6.2",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "supertest": "^7.1.1",
+    "ts-jest": "^29.4.0"
   },
   "devDependencies": {
     "@types/node": "^24.0.3",
