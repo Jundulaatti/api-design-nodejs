@@ -6,7 +6,13 @@
     "strict": false,
     "lib": ["esnext"],
     "esModuleInterop": true,
-    "declaration": true
+    "declaration": true,
+    "target": "ES2017",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["src/**/*.ts"]
 }
